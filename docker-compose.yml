@@ -13,6 +13,8 @@ services:
     volumes:
       - ./server/database/data/dev:/var/lib/postgresql/data
     container_name: postgres_db
+    ports:
+      - 5432:5432
   ## SERVER ##
   server:
     build:
@@ -32,6 +34,15 @@ services:
       - postgres_db
     restart: always
     container_name: server
+    develop:
+      watch:
+        - action: sync
+          path: ./server
+          # target: /src/web
+          ignore:
+            - ./node_modules/
+        - action: rebuild
+          path: ./server/package.json
   ## CLIENT ##
   # client:
   #   build:
