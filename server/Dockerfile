@@ -1,15 +1,13 @@
-FROM node:20
+FROM node:21-alpine
 
 WORKDIR /app
 
-COPY package.json ./
+COPY . /app
 
+RUN npm install -g nodemon --silent
 RUN yarn install
+RUN apk add --no-cache bash
 
-COPY . .
+EXPOSE 5500
 
-RUN yarn build
-
-EXPOSE 5000
-
-CMD [ "yarn", "start:dev" ]
+CMD ["yarn", "start:dev"]
