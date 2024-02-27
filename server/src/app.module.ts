@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './user/user.entity';
 import { ArticleEntity } from './article/article.entity';
 import { ArticleModule } from './article/article.module';
+import { HttpErrorFilter } from './shared/http-error.filter';
+import { UserEntity } from './user/user.entity';
 import { UserModule } from './user/user.module';
-import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -24,7 +26,13 @@ import { DataSource } from 'typeorm';
     ArticleModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpErrorFilter,
+    },
+  ],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}
