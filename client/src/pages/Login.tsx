@@ -1,14 +1,49 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
+import { Box, Grid, TextField, Typography } from "@mui/material";
+import { AxiosError } from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import authApi from "../api/authApi";
+import { HOME } from "../constant/routes";
+import { useAuth } from "../provider/authProvider";
 
 const Login = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const { setToken } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [errMessage, setErrMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = data.get("email");
+    const password = data.get("password");
+    if (!email || !password) {
+      setErrMessage("Invalid payload");
+      return;
+    }
+
+    const jsonData = {
+      email: email.toString(),
+      password: password.toString(),
+    };
+
+    try {
+      setLoading(true);
+      const res = await authApi.login(jsonData);
+      navigate(HOME, { replace: true });
+      const token = res.data.token;
+      setToken(token);
+    } catch (e) {
+      let errMessage = "Error";
+      if (e instanceof AxiosError) {
+        errMessage = e.response?.data?.message;
+      } else if (e instanceof Error) {
+        e.message;
+      }
+      setErrMessage(errMessage);
+      setLoading(false);
+    }
   };
 
   return (
@@ -21,7 +56,7 @@ const Login = () => {
       }}
     >
       <Typography component="h1" variant="h5">
-        Sign in
+        Log in
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
@@ -44,14 +79,18 @@ const Login = () => {
           id="password"
           autoComplete="current-password"
         />
-        <Button
+        {errMessage && (
+          <Typography sx={{ color: "red" }}>{errMessage}</Typography>
+        )}
+        <LoadingButton
           type="submit"
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
+          loading={loading}
         >
-          Sign In
-        </Button>
+          Log In
+        </LoadingButton>
         <Grid container>
           <Grid item>
             <Link to="/register">{"Don't have an account? Register"}</Link>

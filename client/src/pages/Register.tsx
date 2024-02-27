@@ -1,22 +1,57 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import httpClientInstance from "../httpClient";
+import { LoadingButton } from "@mui/lab";
+import { Box, Grid, TextField, Typography } from "@mui/material";
+import { AxiosError } from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { HOME } from "../constant/routes";
+import authApi from "../api/authApi";
 
 const Register = () => {
+  const [loading, setLoading] = useState(false);
+  const [errMessage, setErrMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const password = data.get("password");
+    const confirmPassword = data.get("confirm-password");
+    const email = data.get("email");
+    const fullname = data.get("fullname");
+    const username = data.get("username");
+
+    if (password !== confirmPassword) {
+      setErrMessage("Confirm password not match!");
+
+      return;
+    }
+
+    if (!email || !fullname || !username || !password || !confirmPassword) {
+      setErrMessage("Invalid payload");
+
+      return;
+    }
+
     const jsonData = {
-      email: data.get("email"),
-      password: data.get("password"),
-      username: data.get("username"),
-      fullname: data.get("fullname"),
+      email: email.toString(),
+      password: password.toString(),
+      username: username.toString(),
+      fullname: fullname.toString(),
     };
 
     try {
-      await httpClientInstance.post("/register", jsonData);
+      setLoading(true);
+      await authApi.register(jsonData);
+      navigate(HOME, { replace: true });
     } catch (e) {
-      console.error(e);
+      let errMessage = "Error";
+      if (e instanceof AxiosError) {
+        errMessage = e.response?.data?.message;
+      } else if (e instanceof Error) {
+        e.message;
+      }
+      setErrMessage(errMessage);
+      setLoading(false);
     }
   };
 
@@ -57,6 +92,16 @@ const Register = () => {
           margin="normal"
           required
           fullWidth
+          name="confirm-password"
+          label="Confirm Password"
+          type="password"
+          id="confirm-password"
+          autoComplete="confirm-password"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
           name="username"
           label="Username"
           id="username"
@@ -71,14 +116,18 @@ const Register = () => {
           id="fullname"
           autoComplete="fullname"
         />
-        <Button
+        {errMessage && (
+          <Typography sx={{ color: "red" }}>{errMessage}</Typography>
+        )}
+        <LoadingButton
           type="submit"
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
+          loading={loading}
         >
           Sign In
-        </Button>
+        </LoadingButton>
         <Grid container>
           <Grid item>
             <Link to="/login">{"Already have an account? Log In"}</Link>

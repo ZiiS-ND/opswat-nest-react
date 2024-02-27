@@ -1,6 +1,4 @@
 import axios from "axios";
-import { STORAGE_TOKEN_KEY } from "../constant/basic_constant";
-import { LOGIN } from "../constant/routes";
 
 const httpClientInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -15,12 +13,13 @@ httpClientInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response.status === 401) {
-      if (window.location.pathname !== LOGIN) {
-        localStorage.removeItem(STORAGE_TOKEN_KEY);
-        window.location.replace(LOGIN);
-      }
-    }
+    // if (error.response.status === 401) {
+    //   if (window.location.pathname !== LOGIN) {
+    //     localStorage.removeItem(STORAGE_TOKEN_KEY);
+    //     window.location.replace(LOGIN);
+    //   }
+    // }
+    console.log(error);
     return Promise.reject(error);
   }
 );
