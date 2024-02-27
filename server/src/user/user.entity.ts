@@ -4,14 +4,15 @@ import {
   Column,
   CreateDateColumn,
   BeforeInsert,
-  // OneToMany,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 import { hash, compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-// import { TodoEntity } from 'src/todo/todo.entity';
 import { UserSO } from './user.dto';
+import { ArticleEntity } from 'src/article/article.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -39,13 +40,16 @@ export class UserEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @ManyToMany(() => ArticleEntity)
+  @JoinTable({
+    name: 'user_favorite_articles',
+  })
+  favoriteArticles: ArticleEntity[] = [];
+
   @BeforeInsert()
   hashPassword = async () => {
     this.password = await hash(this.password, 8);
   };
-
-  //   @OneToMany((type) => TodoEntity, (todo) => todo.author)
-  //   todos: TodoEntity[];
 
   comparePassword = async (attempt: string) => {
     return await compare(attempt, this.password);

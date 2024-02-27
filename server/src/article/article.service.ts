@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleDTO } from './article.dto';
 
 @Injectable()
-class ArticleService {
+export class ArticleService {
   constructor(
     @InjectRepository(ArticleEntity)
     private articleRepository: Repository<ArticleEntity>,
@@ -15,5 +15,3 @@ class ArticleService {
     console.log(data);
   }
 }
-
-export default ArticleService;
