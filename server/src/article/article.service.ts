@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
@@ -17,6 +17,8 @@ export class ArticleService {
   createArticle = async (data: ArticleDTO) => {
     const article = this.articleRepository.create(data);
     await this.articleRepository.save(article);
+
+    return article;
   };
 
   getAllArticle = async () => {
@@ -43,9 +45,21 @@ export class ArticleService {
 
   favoriteArticle = async (id: string, userId: string) => {
     const article = await this.articleRepository.findOneByOrFail({ id });
-    const user = await this.userRepository.findOneByOrFail({ id: userId });
-    user.favoriteArticles = [...user.favoriteArticles, article];
+    const user = await this.userRepository.findOneOrFail({
+      relations: {
+        favoriteArticles: true,
+      },
+      where: { id: userId },
+    });
+    if (user.favoriteArticles.some((a) => a.id === article.id)) {
+      throw new HttpException('Already favorited this', HttpStatus.CONFLICT);
+    }
+
+    user.favoriteArticles.push(article);
+    article.favoritesCount = article.favoritesCount + 1;
+
     await this.userRepository.save(user);
+    await this.articleRepository.save(article);
 
     return article;
   };
@@ -58,11 +72,25 @@ export class ArticleService {
       where: { id: userId },
     });
     const article = await this.articleRepository.findOneByOrFail({ id });
+    if (!user.favoriteArticles.some((a) => a.id === article.id)) {
+      throw new HttpException(
+        'You didnt favorite this before, why unfavorite now?',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    article.favoritesCount = article.favoritesCount - 1;
+
+    console.log(id);
 
     user.favoriteArticles = user.favoriteArticles.filter((article) => {
       return article.id !== id;
     });
+
+    console.log(user.favoriteArticles);
+
     await this.userRepository.save(user);
+    await this.articleRepository.save(article);
 
     return article;
   };

@@ -6,6 +6,7 @@ import { UserEntity } from './user/user.entity';
 import { ArticleEntity } from './article/article.entity';
 import { ArticleModule } from './article/article.module';
 import { UserModule } from './user/user.module';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -25,4 +26,6 @@ import { UserModule } from './user/user.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}

@@ -1,16 +1,16 @@
 import {
-  Controller,
-  Post,
-  Get,
   Body,
-  UseGuards,
-  Req,
-  Query,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserDTO, UserRegisterDTO } from './user.dto';
 import { AuthGuard } from 'src/shared/auth.guard';
+import { UserDTO, UserRegisterDTO } from './user.dto';
+import { UserService } from './user.service';
 
 @Controller()
 export class UserController {
@@ -23,6 +23,7 @@ export class UserController {
 
   @Post('register')
   register(@Body() data: UserRegisterDTO) {
+    console.log(data);
     return this.userService.register(data);
   }
 
@@ -41,7 +42,7 @@ export class UserController {
 
   @Delete('user/:email')
   @UseGuards(new AuthGuard())
-  deleteUser(@Req() req: any, @Query('email') email: string) {
+  deleteUser(@Req() req: any, @Param('email') email: string) {
     const yourId = req.user.id;
 
     return this.userService.deleteUser(email, yourId);

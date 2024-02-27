@@ -25,6 +25,7 @@ export class UserService {
 
   register = async (data: UserRegisterDTO): Promise<UserSO> => {
     const { email } = data;
+    console.log(data);
     let user = await this.userRepository.findOneBy({ email });
     if (user) {
       throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
@@ -42,10 +43,10 @@ export class UserService {
     return user.sanitizeObject({ withToken: true });
   };
 
-  getAllUser = async (): Promise<any> => {
+  getAllUser = async (): Promise<UserSO[]> => {
     const users = await this.userRepository.find();
 
-    return users;
+    return users.map((user) => user.sanitizeObject());
   };
 
   deleteUser = async (email: string, yourId: string): Promise<any> => {

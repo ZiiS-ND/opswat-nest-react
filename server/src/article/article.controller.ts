@@ -3,15 +3,15 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
-  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ArticleService } from './article.service';
-import { ArticleDTO } from './article.dto';
 import { AuthGuard } from 'src/shared/auth.guard';
+import { ArticleDTO } from './article.dto';
+import { ArticleService } from './article.service';
 
 @Controller('article')
 @UseGuards(new AuthGuard())
@@ -24,7 +24,7 @@ export class ArticleController {
   }
 
   @Put('/:id')
-  updateAritcle(@Body() data: ArticleDTO, @Query('id') id: string) {
+  updateAritcle(@Body() data: ArticleDTO, @Param('id') id: string) {
     return this.articleService.updateArticle(id, data);
   }
 
@@ -34,19 +34,19 @@ export class ArticleController {
   }
 
   @Delete('/:id')
-  deleteArticle(@Query('id') id: string) {
+  deleteArticle(@Param('id') id: string) {
     return this.articleService.deleteArticle(id);
   }
 
   @Post('/:id/favorite')
-  favoriteArticle(@Req() req: any, @Query('id') id: string) {
+  favoriteArticle(@Req() req: any, @Param('id') id: string) {
     const userId = req.user.id;
 
     return this.articleService.favoriteArticle(id, userId);
   }
 
   @Delete('/:id/favorite')
-  unfavoriteArticl(@Req() req: any, @Query('id') id: string) {
+  unfavoriteArticle(@Req() req: any, @Param('id') id: string) {
     const userId = req.user.id;
 
     return this.articleService.unfavoriteArticle(id, userId);

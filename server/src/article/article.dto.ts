@@ -3,3 +3,11 @@ export class ArticleDTO {
 
   body: string;
 }
+
+export class ArticleSO {
+  title: string;
+
+  body: string;
+
+  favoriteCount: number;
+}
