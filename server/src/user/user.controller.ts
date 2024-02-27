@@ -1,4 +1,13 @@
-import { Controller, Post, Get, Body, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Req,
+  Query,
+  Delete,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO, UserRegisterDTO } from './user.dto';
 import { AuthGuard } from 'src/shared/auth.guard';
@@ -19,13 +28,22 @@ export class UserController {
 
   @Get('profile')
   @UseGuards(new AuthGuard())
-  getProfile(@Req() req) {
+  getProfile(@Req() req: any) {
     const userEmail = req.user.email;
     return this.userService.getProfile(userEmail);
   }
 
   @Get('users')
+  @UseGuards(new AuthGuard())
   getAllUsers() {
     return this.userService.getAllUser();
+  }
+
+  @Delete('user/:email')
+  @UseGuards(new AuthGuard())
+  deleteUser(@Req() req: any, @Query('email') email: string) {
+    const yourId = req.user.id;
+
+    return this.userService.deleteUser(email, yourId);
   }
 }

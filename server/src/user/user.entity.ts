@@ -44,7 +44,7 @@ export class UserEntity {
   @JoinTable({
     name: 'user_favorite_articles',
   })
-  favoriteArticles: ArticleEntity[] = [];
+  favoriteArticles: ArticleEntity[];
 
   @BeforeInsert()
   hashPassword = async () => {

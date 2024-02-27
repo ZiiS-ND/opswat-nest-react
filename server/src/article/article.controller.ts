@@ -1,13 +1,54 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { ArticleDTO } from './article.dto';
+import { AuthGuard } from 'src/shared/auth.guard';
 
-@Controller()
+@Controller('article')
+@UseGuards(new AuthGuard())
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
-  @Post('create')
-  login(@Body() data: ArticleDTO) {
+  @Post('/')
+  createArticle(@Body() data: ArticleDTO) {
     return this.articleService.createArticle(data);
+  }
+
+  @Put('/:id')
+  updateAritcle(@Body() data: ArticleDTO, @Query('id') id: string) {
+    return this.articleService.updateArticle(id, data);
+  }
+
+  @Get('/')
+  getAllArticles() {
+    return this.articleService.getAllArticle();
+  }
+
+  @Delete('/:id')
+  deleteArticle(@Query('id') id: string) {
+    return this.articleService.deleteArticle(id);
+  }
+
+  @Post('/:id/favorite')
+  favoriteArticle(@Req() req: any, @Query('id') id: string) {
+    const userId = req.user.id;
+
+    return this.articleService.favoriteArticle(id, userId);
+  }
+
+  @Delete('/:id/favorite')
+  unfavoriteArticl(@Req() req: any, @Query('id') id: string) {
+    const userId = req.user.id;
+
+    return this.articleService.unfavoriteArticle(id, userId);
   }
 }

@@ -1,3 +1,4 @@
+import { Length } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -16,6 +17,7 @@ export class ArticleEntity {
   title: string;
 
   @Column('text')
+  @Length(0, 10000)
   body: string;
 
   @CreateDateColumn()

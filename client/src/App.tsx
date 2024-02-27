@@ -1,7 +1,7 @@
 import './App.css'
 
 function App() {
-  return <>NOTHING HERE</>
+  return <>NOTHING </>
 }
 
 export default App

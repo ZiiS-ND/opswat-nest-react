@@ -36,7 +36,7 @@ export class UserService {
   };
 
   getProfile = async (email: string): Promise<any> => {
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOneBy({ email });
     if (!user)
       throw new HttpException('Email does not exists', HttpStatus.NOT_FOUND);
     return user.sanitizeObject({ withToken: true });
@@ -46,5 +46,20 @@ export class UserService {
     const users = await this.userRepository.find();
 
     return users;
+  };
+
+  deleteUser = async (email: string, yourId: string): Promise<any> => {
+    const user = await this.userRepository.findOneByOrFail({ email });
+
+    if (user.id === yourId) {
+      throw new HttpException(
+        "You can't delete yourself",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    this.userRepository.remove(user);
+
+    return user;
   };
 }
