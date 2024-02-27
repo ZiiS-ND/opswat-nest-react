@@ -2,12 +2,14 @@ FROM node:21-alpine
 
 WORKDIR /app
 
-COPY . /app
+COPY package*.json ./
 
-RUN npm install -g nodemon --silent
-RUN yarn install
-RUN apk add --no-cache bash
+RUN npm install
+
+COPY . .
+
+RUN npm run build
 
 EXPOSE 5500
 
-CMD ["yarn", "start:dev"]
+CMD [ "npm", "run", "start:dev" ]
