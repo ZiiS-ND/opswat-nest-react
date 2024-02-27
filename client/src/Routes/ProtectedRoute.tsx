@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
+import MasterLayout from "../components/MasterLayout";
 
 export const ProtectedRoute = () => {
   const { token } = useAuth();
@@ -8,5 +9,9 @@ export const ProtectedRoute = () => {
     return <Navigate to="/login" />;
   }
 
-  return <Outlet />;
+  return (
+    <MasterLayout>
+      <Outlet />
+    </MasterLayout>
+  );
 };

@@ -8,7 +8,9 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import { LOGIN, REGISTER } from "../constant/routes";
+import { ARTICLE, LOGIN, REGISTER, USER } from "../constant/routes";
+import User from "../pages/User";
+import Article from "../pages/Article";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -25,6 +27,14 @@ const Routes = () => {
         {
           path: "*",
           element: <Navigate to="/" />,
+        },
+        {
+          path: USER,
+          element: <User />,
+        },
+        {
+          path: ARTICLE,
+          element: <Article />,
         },
       ],
     },

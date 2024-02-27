@@ -1,20 +1,16 @@
-import { LoadingButton } from "@mui/lab";
-import { Box } from "@mui/material";
-import { STORAGE_TOKEN_KEY } from "../constant/basic_constant";
-import { useAuth } from "../provider/authProvider";
+import { Box, Typography } from "@mui/material";
 
 const Home = () => {
-  const { setToken } = useAuth();
   return (
     <Box>
-      <LoadingButton
-        onClick={() => {
-          setToken(null);
-          window.localStorage.removeItem(STORAGE_TOKEN_KEY);
-        }}
-      >
-        HELLO
-      </LoadingButton>
+      <Typography variant="h3">
+        WELCOME TO THE ARTICLE MANAGEMENT APP !
+      </Typography>
+
+      <Typography variant="h5">
+        I don't have the necessary design skill so please pardon this simple UI
+        !
+      </Typography>
     </Box>
   );
 };
