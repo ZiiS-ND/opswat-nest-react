@@ -12,7 +12,6 @@ import { verify } from 'jsonwebtoken';
 export class AuthGuard implements CanActivate {
   canActivate = async (context: ExecutionContext): Promise<boolean> => {
     const request = context.switchToHttp().getRequest();
-    console.log(request.headers);
     if (!request.headers.authorization) return false;
 
     request.user = await this.verifyToken(request.headers.authorization);
