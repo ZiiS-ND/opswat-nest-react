@@ -11,7 +11,9 @@ import {
 import { AuthGuard } from 'src/shared/auth.guard';
 import { UserDTO, UserRegisterDTO } from './user.dto';
 import { UserService } from './user.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller()
 export class UserController {
   constructor(private userService: UserService) {}
@@ -27,6 +29,7 @@ export class UserController {
     return this.userService.register(data);
   }
 
+  @ApiBearerAuth()
   @Get('profile')
   @UseGuards(new AuthGuard())
   getProfile(@Req() req: any) {
@@ -34,12 +37,14 @@ export class UserController {
     return this.userService.getProfile(userEmail);
   }
 
+  @ApiBearerAuth()
   @Get('users')
   @UseGuards(new AuthGuard())
   getAllUsers() {
     return this.userService.getAllUser();
   }
 
+  @ApiBearerAuth()
   @Delete('user/:email')
   @UseGuards(new AuthGuard())
   deleteUser(@Req() req: any, @Param('email') email: string) {

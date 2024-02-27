@@ -12,7 +12,10 @@ import {
 import { AuthGuard } from 'src/shared/auth.guard';
 import { ArticleDTO } from './article.dto';
 import { ArticleService } from './article.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('articles')
+@ApiBearerAuth()
 @Controller('article')
 @UseGuards(new AuthGuard())
 export class ArticleController {
