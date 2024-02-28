@@ -83,6 +83,7 @@ const User = () => {
 
   return (
     <Box>
+      <Typography variant='h5'>User list</Typography>
       <TableContainer component={Box}>
         <Table>
           <TableHead>
@@ -120,6 +121,7 @@ const User = () => {
                       variant='contained'
                       onClick={() => deleteUser(user.email)}
                       loading={isDeleting}
+                      color='error'
                     >
                       Delete
                     </LoadingButton>

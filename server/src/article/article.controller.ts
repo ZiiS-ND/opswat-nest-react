@@ -37,8 +37,10 @@ export class ArticleController {
   }
 
   @Get('/:id')
-  getArticle(@Param('id') id: string) {
-    return this.articleService.getArticle(id);
+  getArticle(@Req() req: any, @Param('id') id: string) {
+    const userId = req.user.id;
+
+    return this.articleService.getArticle(id, userId);
   }
 
   @Delete('/:id')

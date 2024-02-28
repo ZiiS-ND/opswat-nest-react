@@ -12,4 +12,6 @@ export class ArticleSO {
   body: string;
 
   favoritesCount: number;
+
+  favorited?: boolean;
 }

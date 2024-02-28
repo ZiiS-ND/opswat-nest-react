@@ -5,7 +5,7 @@ import articleApi from '../api/articleApi'
 import { AxiosError } from 'axios'
 import Loading from '../components/Loading'
 import { Box, Button, Stack, Typography } from '@mui/material'
-import { Delete, Edit } from '@mui/icons-material'
+import { Delete, Edit, Favorite, HeartBroken } from '@mui/icons-material'
 import { ARTICLE, ARTICLE_EDIT } from '../constant/routes'
 import { LoadingButton } from '@mui/lab'
 
@@ -16,6 +16,8 @@ const ArticleDetail = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [errMessage, setErrMessage] = useState<string | null>(null)
+  const [favorited, setFavorited] = useState(false)
+  const [isFavoring, setIsFavoring] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const ArticleDetail = () => {
       const res = await articleApi.getArticle(id ?? '')
 
       setArticle(res.data)
+      setFavorited(res.data.favorited ?? false)
       setIsLoading(false)
       setErrMessage(null)
     }
@@ -58,6 +61,38 @@ const ArticleDetail = () => {
     },
     [navigate]
   )
+
+  const favoriteAricle = useCallback(async (id: string | number) => {
+    try {
+      setIsFavoring(true)
+      await articleApi.favoriteArticle(id)
+      setIsFavoring(false)
+      setFavorited(true)
+    } catch (e) {
+      setIsFavoring(false)
+      if (e instanceof AxiosError) {
+        console.error(e.response?.data?.message)
+      } else if (e instanceof Error) {
+        console.error(e.message)
+      }
+    }
+  }, [])
+
+  const unFavoriteArticle = useCallback(async (id: string | number) => {
+    try {
+      setIsFavoring(true)
+      await articleApi.unfavoriteArticle(id)
+      setIsFavoring(false)
+      setFavorited(false)
+    } catch (e) {
+      setIsFavoring(false)
+      if (e instanceof AxiosError) {
+        console.error(e.response?.data?.message)
+      } else if (e instanceof Error) {
+        console.error(e.message)
+      }
+    }
+  }, [])
 
   if (!id) {
     return (
@@ -96,6 +131,29 @@ const ArticleDetail = () => {
   return (
     <Box>
       <Stack direction='row-reverse' gap={1}>
+        {favorited ? (
+          <LoadingButton
+            endIcon={<HeartBroken />}
+            onClick={() => unFavoriteArticle(id)}
+            variant='contained'
+            color='secondary'
+            loadingPosition='end'
+            loading={isFavoring}
+          >
+            Unfavorite
+          </LoadingButton>
+        ) : (
+          <LoadingButton
+            endIcon={<Favorite />}
+            onClick={() => favoriteAricle(id)}
+            variant='contained'
+            color='secondary'
+            loadingPosition='end'
+            loading={isFavoring}
+          >
+            Favorite
+          </LoadingButton>
+        )}
         <LoadingButton
           endIcon={<Delete />}
           onClick={() => deleteArticle(id)}

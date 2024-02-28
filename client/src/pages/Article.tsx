@@ -14,10 +14,10 @@ import {
 } from '@mui/material'
 import { AxiosError } from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import articleApi from '../api/articleApi'
 import Loading from '../components/Loading'
-import { ARTICLE_ADD } from '../constant/routes'
+import { ARTICLE_ADD, ARTICLE_DETAIL } from '../constant/routes'
 
 export type ArticleSO = {
   id: string
@@ -27,6 +27,8 @@ export type ArticleSO = {
   body: string
 
   favoritesCount: number
+
+  favorited?: boolean
 }
 
 const Article = () => {
@@ -92,6 +94,7 @@ const Article = () => {
 
   return (
     <Box>
+      <Typography variant='h5'>Article list</Typography>
       <Stack direction='row-reverse'>
         <Button
           endIcon={<Add />}
@@ -105,7 +108,6 @@ const Article = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Favorite Count</TableCell>
               <TableCell>Action</TableCell>
@@ -118,10 +120,9 @@ const Article = () => {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component='th' scope='row'>
-                  {article.id}
-                </TableCell>
-                <TableCell component='th' scope='row'>
-                  {article.title}
+                  <Link to={ARTICLE_DETAIL.replace(':id', article.id)}>
+                    {article.title}
+                  </Link>
                 </TableCell>
                 <TableCell component='th' scope='row'>
                   {article.favoritesCount}
@@ -133,6 +134,7 @@ const Article = () => {
                     variant='contained'
                     onClick={() => deleteArticle(article.id)}
                     loading={isDeleting}
+                    color='error'
                   >
                     Delete
                   </LoadingButton>

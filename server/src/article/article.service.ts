@@ -27,15 +27,19 @@ export class ArticleService {
     return articles.map((article) => article.sanitizeObject());
   };
 
-  getArticle = async (id: string) => {
-    const article = await this.articleRepository.findOneByOrFail({ id });
+  getArticle = async (id: string, userId: string) => {
+    const article = await this.articleRepository.findOneOrFail({
+      where: { id },
+      relations: {
+        favoriteUsers: true,
+      },
+    });
 
-    return article.sanitizeObject();
+    return article.sanitizeObject({ withFavorite: true, userId });
   };
 
   updateArticle = async (id: string, data: ArticleDTO) => {
     const article = await this.articleRepository.findOneByOrFail({ id });
-
     await this.articleRepository.update({ id }, data);
 
     return article.sanitizeObject();

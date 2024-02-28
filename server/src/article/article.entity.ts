@@ -6,8 +6,11 @@ import {
   CreateDateColumn,
   // OneToMany,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { ArticleSO } from './article.dto';
+import { UserEntity } from 'src/user/user.entity';
 
 @Entity('article')
 export class ArticleEntity {
@@ -33,9 +36,30 @@ export class ArticleEntity {
   })
   favoritesCount: number;
 
-  sanitizeObject = (): ArticleSO => {
+  @ManyToMany(() => UserEntity)
+  @JoinTable({
+    name: 'user_favorite_articles',
+  })
+  favoriteUsers: UserEntity[];
+
+  sanitizeObject = (option?: SanitizeArticleOptions): ArticleSO => {
     const { id, createdAt, title, body, favoritesCount } = this;
-    const responseObj = { id, createdAt, title, body, favoritesCount };
+    const responseObj = {
+      id,
+      createdAt,
+      title,
+      body,
+      favoritesCount,
+    };
+    if (option?.withFavorite) {
+      if (this.favoriteUsers.find((user) => user.id === option?.userId))
+        Object.assign(responseObj, { favorited: true });
+    }
     return responseObj;
   };
 }
+
+type SanitizeArticleOptions = {
+  withFavorite?: boolean;
+  userId?: string;
+};
