@@ -13,7 +13,7 @@ class articleApi {
 
   getArticle = (id: string) => httpClientInstance.get(`/article/${id}`)
 
-  updateArticle = (payload: ArticleDTO, id: string | number) =>
+  updateArticle = (payload: ArticleDTO, id: string | number | undefined) =>
     httpClientInstance.put(`/article/${id}`, { ...payload })
 
   deleteArticle = (id: string | number) =>
