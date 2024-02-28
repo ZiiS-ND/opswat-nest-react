@@ -1,25 +1,27 @@
-import httpClientInstance from "../httpClient";
+import httpClientInstance from '../httpClient'
 
 type ArticleDTO = {
-  title: string;
-  body: string;
-};
+  title: string
+  body: string
+}
 
 class articleApi {
   createArticle = (payload: ArticleDTO) =>
-    httpClientInstance.post("/article", { ...payload });
+    httpClientInstance.post('/article', { ...payload })
+
+  getAllArticle = () => httpClientInstance.get('/article')
 
   updateArticle = (payload: ArticleDTO, id: string | number) =>
-    httpClientInstance.put(`/article/${id}`, { ...payload });
+    httpClientInstance.put(`/article/${id}`, { ...payload })
 
   deleteArticle = (id: string | number) =>
-    httpClientInstance.delete(`/article/${id}`);
+    httpClientInstance.delete(`/article/${id}`)
 
   favoriteArticle = (id: string | number) =>
-    httpClientInstance.post(`/article/${id}/favorite`);
+    httpClientInstance.post(`/article/${id}/favorite`)
 
   unfavoriteArticle = (id: string | number) =>
-    httpClientInstance.delete(`/article/${id}/favorite`);
+    httpClientInstance.delete(`/article/${id}/favorite`)
 }
 
-export default new articleApi();
+export default new articleApi()

@@ -5,9 +5,11 @@ export class ArticleDTO {
 }
 
 export class ArticleSO {
+  id: string;
+
   title: string;
 
   body: string;
 
-  favoriteCount: number;
+  favoritesCount: number;
 }

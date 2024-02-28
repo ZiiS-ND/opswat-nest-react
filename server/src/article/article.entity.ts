@@ -7,6 +7,7 @@ import {
   // OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
+import { ArticleSO } from './article.dto';
 
 @Entity('article')
 export class ArticleEntity {
@@ -31,4 +32,10 @@ export class ArticleEntity {
     default: 0,
   })
   favoritesCount: number;
+
+  sanitizeObject = (): ArticleSO => {
+    const { id, createdAt, title, body, favoritesCount } = this;
+    const responseObj = { id, createdAt, title, body, favoritesCount };
+    return responseObj;
+  };
 }

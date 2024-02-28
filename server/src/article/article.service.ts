@@ -18,13 +18,13 @@ export class ArticleService {
     const article = this.articleRepository.create(data);
     await this.articleRepository.save(article);
 
-    return article;
+    return article.sanitizeObject();
   };
 
   getAllArticle = async () => {
     const articles = await this.articleRepository.find();
 
-    return articles;
+    return articles.map((article) => article.sanitizeObject());
   };
 
   updateArticle = async (id: string, data: ArticleDTO) => {
@@ -32,7 +32,7 @@ export class ArticleService {
 
     await this.articleRepository.update({ id }, data);
 
-    return article;
+    return article.sanitizeObject();
   };
 
   deleteArticle = async (id: string) => {
@@ -40,7 +40,7 @@ export class ArticleService {
 
     await this.articleRepository.remove(article);
 
-    return article;
+    return article.sanitizeObject();
   };
 
   favoriteArticle = async (id: string, userId: string) => {
@@ -61,7 +61,7 @@ export class ArticleService {
     await this.userRepository.save(user);
     await this.articleRepository.save(article);
 
-    return article;
+    return article.sanitizeObject();
   };
 
   unfavoriteArticle = async (id: string, userId: string) => {
@@ -80,18 +80,13 @@ export class ArticleService {
     }
 
     article.favoritesCount = article.favoritesCount - 1;
-
-    console.log(id);
-
     user.favoriteArticles = user.favoriteArticles.filter((article) => {
       return article.id !== id;
     });
 
-    console.log(user.favoriteArticles);
-
     await this.userRepository.save(user);
     await this.articleRepository.save(article);
 
-    return article;
+    return article.sanitizeObject();
   };
 }
