@@ -25,7 +25,6 @@ export class UserService {
 
   register = async (data: UserRegisterDTO): Promise<UserSO> => {
     const { email } = data;
-    console.log(data);
     let user = await this.userRepository.findOneBy({ email });
     if (user) {
       throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
