@@ -64,7 +64,6 @@ const Routes = () => {
     },
   ]
 
-  // Define routes accessible only to non-authenticated users
   const routesForNotAuthenticatedOnly = [
     {
       path: '*',
