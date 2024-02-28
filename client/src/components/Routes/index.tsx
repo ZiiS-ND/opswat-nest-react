@@ -1,32 +1,26 @@
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
-import { useAuth } from "../provider/authProvider";
-import { ProtectedRoute } from "./ProtectedRoute";
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import { ARTICLE, LOGIN, REGISTER, USER } from "../constant/routes";
-import User from "../pages/User";
-import Article from "../pages/Article";
+import { Article, Home, Login } from '@mui/icons-material'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { ARTICLE, LOGIN, REGISTER, USER } from '../../constant/routes'
+import Register from '../../pages/Register'
+import User from '../../pages/User'
+import { useAuth } from '../../provider/authProvider'
+import { ProtectedRoute } from './ProtectedRoute'
 
 const Routes = () => {
-  const { token } = useAuth();
+  const { token } = useAuth()
 
   const routesForAuthenticatedOnly = [
     {
-      path: "/",
+      path: '/',
       element: <ProtectedRoute />,
       children: [
         {
-          path: "/",
+          path: '/',
           element: <Home />,
         },
         {
-          path: "*",
-          element: <Navigate to="/" />,
+          path: '*',
+          element: <Navigate to='/' />,
         },
         {
           path: USER,
@@ -38,13 +32,13 @@ const Routes = () => {
         },
       ],
     },
-  ];
+  ]
 
   // Define routes accessible only to non-authenticated users
   const routesForNotAuthenticatedOnly = [
     {
-      path: "*",
-      element: <Navigate to="/login" />,
+      path: '*',
+      element: <Navigate to='/login' />,
     },
     {
       path: LOGIN,
@@ -54,14 +48,14 @@ const Routes = () => {
       path: REGISTER,
       element: <Register />,
     },
-  ];
+  ]
 
   const router = createBrowserRouter([
     ...(!token ? routesForNotAuthenticatedOnly : []),
     ...routesForAuthenticatedOnly,
-  ]);
+  ])
 
-  return <RouterProvider router={router} />;
-};
+  return <RouterProvider router={router} />
+}
 
-export default Routes;
+export default Routes
