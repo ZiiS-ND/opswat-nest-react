@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 services:
   ## POSTGRES ##
   postgres_db:
@@ -22,7 +22,7 @@ services:
       - ./server/.env
     container_name: nest-docker-postgres
     ports:
-      - "5500:5500"
+      - '5500:5500'
     depends_on:
       - postgres_db
     volumes:
@@ -50,8 +50,8 @@ services:
     container_name: nest-pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+      - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
-      - "5050:80"
+      - '5050:80'
     depends_on:
       - postgres_db
