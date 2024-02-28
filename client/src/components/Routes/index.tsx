@@ -15,6 +15,7 @@ import Home from '../../pages/Home'
 import Article from '../../pages/Article'
 import Login from '../../pages/Login'
 import ArticleAdd from '../../pages/ArticleAdd'
+import ArticleDetail from '../../pages/ArticleDetail'
 
 const Routes = () => {
   const { token } = useAuth()
@@ -49,7 +50,7 @@ const Routes = () => {
             },
             {
               path: ARTICLE_DETAIL,
-              element: <div>ARticle detail</div>,
+              element: <ArticleDetail />,
             },
           ],
         },

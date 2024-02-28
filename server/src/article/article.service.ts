@@ -27,6 +27,12 @@ export class ArticleService {
     return articles.map((article) => article.sanitizeObject());
   };
 
+  getArticle = async (id: string) => {
+    const article = await this.articleRepository.findOneByOrFail({ id });
+
+    return article.sanitizeObject();
+  };
+
   updateArticle = async (id: string, data: ArticleDTO) => {
     const article = await this.articleRepository.findOneByOrFail({ id });
 

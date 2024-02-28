@@ -36,6 +36,11 @@ export class ArticleController {
     return this.articleService.getAllArticle();
   }
 
+  @Get('/:id')
+  getArticle(@Param('id') id: string) {
+    return this.articleService.getArticle(id);
+  }
+
   @Delete('/:id')
   deleteArticle(@Param('id') id: string) {
     return this.articleService.deleteArticle(id);

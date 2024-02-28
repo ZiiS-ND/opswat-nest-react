@@ -11,6 +11,8 @@ class articleApi {
 
   getAllArticle = () => httpClientInstance.get('/article')
 
+  getArticle = (id: string) => httpClientInstance.get(`/article/${id}`)
+
   updateArticle = (payload: ArticleDTO, id: string | number) =>
     httpClientInstance.put(`/article/${id}`, { ...payload })
 

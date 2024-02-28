@@ -19,7 +19,7 @@ import articleApi from '../api/articleApi'
 import Loading from '../components/Loading'
 import { ARTICLE_ADD } from '../constant/routes'
 
-type ArticleSO = {
+export type ArticleSO = {
   id: string
 
   title: string
