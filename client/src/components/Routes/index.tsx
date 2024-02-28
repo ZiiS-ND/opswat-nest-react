@@ -1,5 +1,12 @@
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { ARTICLE, LOGIN, REGISTER, USER } from '../../constant/routes'
+import {
+  ARTICLE,
+  ARTICLE_ADD,
+  ARTICLE_DETAIL,
+  LOGIN,
+  REGISTER,
+  USER,
+} from '../../constant/routes'
 import Register from '../../pages/Register'
 import User from '../../pages/User'
 import { useAuth } from '../../provider/authProvider'
@@ -7,6 +14,7 @@ import { ProtectedRoute } from './ProtectedRoute'
 import Home from '../../pages/Home'
 import Article from '../../pages/Article'
 import Login from '../../pages/Login'
+import ArticleAdd from '../../pages/ArticleAdd'
 
 const Routes = () => {
   const { token } = useAuth()
@@ -30,7 +38,20 @@ const Routes = () => {
         },
         {
           path: ARTICLE,
-          element: <Article />,
+          children: [
+            {
+              path: ARTICLE,
+              element: <Article />,
+            },
+            {
+              path: ARTICLE_ADD,
+              element: <ArticleAdd />,
+            },
+            {
+              path: ARTICLE_DETAIL,
+              element: <div>ARticle detail</div>,
+            },
+          ],
         },
       ],
     },

@@ -1,5 +1,9 @@
+import { Add, Delete } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
+  Button,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -8,12 +12,12 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import Loading from '../components/Loading'
 import { AxiosError } from 'axios'
-import articleApi from '../api/articleApi'
 import { useCallback, useEffect, useState } from 'react'
-import { LoadingButton } from '@mui/lab'
-import { Delete } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
+import articleApi from '../api/articleApi'
+import Loading from '../components/Loading'
+import { ARTICLE_ADD } from '../constant/routes'
 
 type ArticleSO = {
   id: string
@@ -30,6 +34,7 @@ const Article = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [errMessage, setErrMessage] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -56,12 +61,9 @@ const Article = () => {
   const deleteArticle = useCallback(async (id: string | number) => {
     try {
       setIsDeleting(true)
-      const res = await articleApi.deleteArticle(id)
-
-      const deletedArticle = res.data
-
+      await articleApi.deleteArticle(id)
       setArticles((prevUsers) => {
-        return prevUsers.filter((prevUser) => prevUser.id !== deletedArticle.id)
+        return prevUsers.filter((prevUser) => prevUser.id !== id)
       })
       setIsDeleting(false)
     } catch (e) {
@@ -90,6 +92,15 @@ const Article = () => {
 
   return (
     <Box>
+      <Stack direction='row-reverse'>
+        <Button
+          endIcon={<Add />}
+          onClick={() => navigate(ARTICLE_ADD)}
+          variant='contained'
+        >
+          Create
+        </Button>
+      </Stack>
       <TableContainer component={Box}>
         <Table>
           <TableHead>
