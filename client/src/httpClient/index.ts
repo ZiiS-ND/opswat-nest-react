@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { STORAGE_TOKEN_KEY } from '../constant/basic_constant'
 
 const httpClientInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -13,13 +14,9 @@ httpClientInstance.interceptors.response.use(
     return response
   },
   (error) => {
-    // if (error.response.status === 401) {
-    //   if (window.location.pathname !== LOGIN) {
-    //     localStorage.removeItem(STORAGE_TOKEN_KEY);
-    //     window.location.replace(LOGIN);
-    //   }
-    // }
-    console.log(error)
+    if (error?.response?.status === 401) {
+      localStorage.removeItem(STORAGE_TOKEN_KEY)
+    }
     return Promise.reject(error)
   }
 )

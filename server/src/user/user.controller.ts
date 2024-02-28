@@ -29,23 +29,23 @@ export class UserController {
     return this.userService.register(data);
   }
 
-  @ApiBearerAuth()
   @Get('profile')
+  @ApiBearerAuth()
   @UseGuards(new AuthGuard())
   getProfile(@Req() req: any) {
     const userEmail = req.user.email;
     return this.userService.getProfile(userEmail);
   }
 
-  @ApiBearerAuth()
   @Get('users')
+  @ApiBearerAuth()
   @UseGuards(new AuthGuard())
   getAllUsers() {
     return this.userService.getAllUser();
   }
 
-  @ApiBearerAuth()
   @Delete('user/:email')
+  @ApiBearerAuth()
   @UseGuards(new AuthGuard())
   deleteUser(@Req() req: any, @Param('email') email: string) {
     const yourId = req.user.id;
