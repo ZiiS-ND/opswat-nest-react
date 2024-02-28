@@ -1,5 +1,5 @@
 import './App.css'
-import { Routes } from 'react-router-dom'
+import Routes from './components/Routes'
 import AuthProvider from './provider/authProvider'
 
 const App = () => {

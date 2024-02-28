@@ -1,10 +1,12 @@
-import { Article, Home, Login } from '@mui/icons-material'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ARTICLE, LOGIN, REGISTER, USER } from '../../constant/routes'
 import Register from '../../pages/Register'
 import User from '../../pages/User'
 import { useAuth } from '../../provider/authProvider'
 import { ProtectedRoute } from './ProtectedRoute'
+import Home from '../../pages/Home'
+import Article from '../../pages/Article'
+import Login from '../../pages/Login'
 
 const Routes = () => {
   const { token } = useAuth()

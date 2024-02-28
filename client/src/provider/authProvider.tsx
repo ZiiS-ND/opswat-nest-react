@@ -5,59 +5,89 @@ import {
   useEffect,
   useMemo,
   useState,
-} from "react";
-import httpClientInstance from "../httpClient";
+} from 'react'
+import httpClientInstance from '../httpClient'
+import userApi from '../api/userApi'
+
+export type UserSO = {
+  id: string
+  createdAt: string
+  email: string
+  username: string
+  fullname: string
+}
 
 type AuthContextType = {
-  token: string | null;
-  setToken: (a: string | null) => void;
-};
+  token: string | null
+  setToken: (a: string | null) => void
+  user: UserSO
+}
 
 const AuthContext = createContext<AuthContextType>({
-  token: "" || null,
+  token: '' || null,
   setToken: () => {},
-});
+  user: {
+    id: '',
+    createdAt: '',
+    email: '',
+    username: '',
+    fullname: '',
+  },
+})
 
 type AuthProviderType = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 const AuthProvider = ({ children }: AuthProviderType) => {
-  // State to hold the authentication token
-  const [token, setToken_] = useState(localStorage.getItem("token"));
+  const [token, setToken_] = useState(localStorage.getItem('token'))
+  const [user, setUser_] = useState<UserSO>({
+    id: '',
+    createdAt: '',
+    email: '',
+    username: '',
+    fullname: '',
+  })
 
-  // Function to set the authentication token
   const setToken = (newToken: string | null) => {
-    setToken_(newToken);
-  };
+    setToken_(newToken)
+  }
 
   useEffect(() => {
-    if (token) {
-      httpClientInstance.defaults.headers.common["Authorization"] =
-        "Bearer " + token;
-      localStorage.setItem("token", token);
-    } else {
-      delete httpClientInstance.defaults.headers.common["Authorization"];
-      localStorage.removeItem("token");
-    }
-  }, [token]);
+    const getProfile = async () => {
+      const result = await userApi.getProfile()
 
-  // Memoized value of the authentication context
+      setUser_(result.data)
+    }
+
+    if (token) {
+      httpClientInstance.defaults.headers.common['Authorization'] =
+        'Bearer ' + token
+      localStorage.setItem('token', token)
+
+      getProfile().catch(console.error)
+    } else {
+      delete httpClientInstance.defaults.headers.common['Authorization']
+      localStorage.removeItem('token')
+    }
+  }, [token])
+
   const contextValue = useMemo(
     () => ({
       token,
       setToken,
+      user,
     }),
-    [token]
-  );
+    [token, user]
+  )
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  );
-};
+  )
+}
 
 export const useAuth = () => {
-  return useContext(AuthContext);
-};
+  return useContext(AuthContext)
+}
 
-export default AuthProvider;
+export default AuthProvider
